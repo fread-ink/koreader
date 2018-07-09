@@ -3,6 +3,13 @@ local util = require("ffi/util")
 
 local function probeDevice()
     if util.isSDL() then
+        -- if both SDL and /proc/usid are present
+        -- then this is a fread.ink device
+        local kindle_sn = io.open("/proc/usid", "r")
+        if kindle_sn then
+            kindle_sn:close()
+            return require("device/kindle_fread/device")
+        end
         return require("device/sdl/device")
     end
 
